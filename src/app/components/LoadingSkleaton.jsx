@@ -4,7 +4,7 @@ function LoadingSkleaton() {
 
     <div className="w-full max-w-screen-sm bg-gray-200 animate-pulse  p-10 rounded-xl border">
 
-        <div className="flex justify-between items-center gap-2">
+        <div className="flex justify-between flex-wrap items-center gap-2">
 
             <div className="flex flex-col gap-3">
                 <span className="w-32 h-7 bg-gray-300"></span>
@@ -12,7 +12,7 @@ function LoadingSkleaton() {
             </div>
 
             <div className="flex flex-col gap-3">
-                <div className="w-20 h-20 rounded-full bg-gray-400"></div>
+                <div className="w-20 h-20 mobile:w-9 mobile:h-9 rounded-full bg-gray-400"></div>
                 <span className="w-40 h-5 bg-gray-300"></span>
             </div>
 

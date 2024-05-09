@@ -13,6 +13,7 @@ function WeatherSearch() {
 
     const [isLoading, setIsLoading] = useState(false);
     const [weatherInfoData, setWeatherInfoData] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const getWeatherInfo = async () => {
 
@@ -22,19 +23,24 @@ function WeatherSearch() {
 
             if (inputValue?.trim() != '') {
 
-                setIsLoading(true)
+                setIsLoading(true);
+                setWeatherInfoData(null)
                 const response = await axios.get(`https://api.weatherapi.com/v1/current.json?key=ccbdeda720fc4dadb5c93016240905&q=${inputValue}&aqi=yes`);
 
                 const { location, current } = response.data || {};
 
-               if (location && current) {
-                setWeatherInfoData(response.data)
-               }
+                if (location && current) {
+                    setWeatherInfoData(response.data)
+                }
             }
-            
+
         } catch (error) {
             console.log(error)
-        }finally{
+
+            if (error.response) {
+                setErrorMessage(error.response.data.error?.message)
+            }
+        } finally {
             setIsLoading(false);
         }
     }
@@ -46,16 +52,16 @@ function WeatherSearch() {
                         <label htmlFor="Search" className="sr-only"> Search </label>
 
                         <input
-                        ref={inputRef}
+                            ref={inputRef}
                             type="text"
                             placeholder="Type area name"
                             className="w-full md:min-w-96 rounded-md border border-gray-200 py-2.5 px-4 shadow-sm sm:text-xs"
                         />
 
                         <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
-                            <button 
-                            onClick={getWeatherInfo}
-                            type="button" className="text-gray-600 hover:text-gray-700">
+                            <button
+                                onClick={getWeatherInfo}
+                                type="button" className="text-gray-600 hover:text-gray-700">
                                 <span className="sr-only">Search</span>
 
                                 <svg
@@ -78,12 +84,18 @@ function WeatherSearch() {
                 </div>
             </div>
             {isLoading && (
-            <LoadingSkleaton />
+                <LoadingSkleaton />
             )}
-            {!isLoading && weatherInfoData && (
-            <WeatherInfo weatherData={weatherInfoData} />
+            {!isLoading && weatherInfoData ? (
+                <WeatherInfo weatherData={weatherInfoData} />
+            ) : (
+                <>
+                    {errorMessage && (
+                        <h2 className="text-2xl mobile:text-base font-bold my-20 text-center">{errorMessage}</h2>
+                    )}
+                </>
             )}
-            
+
         </>
     )
 }
